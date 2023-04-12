@@ -8,8 +8,8 @@ const certContractABI = require('./ABI.json');
 const port = 9500;
 
 let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
-let myAccountNumber= "0x2BE5E40daBfB2CaA43e70BEbB341175bbC8D2e91";
-let myContractAddress="0xce4BDA8B94b7d9040FD70e5c9ba4877b4292109D";
+let myAccountNumber= "0xf448379A05d2Da9CAE997a1b1d52D4597C9E5ed4";
+let myContractAddress="0x9D83bd7381Ee31f56c22a1cc1e8f9f0335635E80";
 web3.eth.getBalance(myAccountNumber).then(balance => console.log(balance)); 
 
 const cert_contract = new web3.eth.Contract(certContractABI);
@@ -39,7 +39,7 @@ app.post('/verify/certificate', async (req, res) => {
 	let certificateExists = false;
 	let certificateData = {};
 	for (let i = 0; i < certificateCount; i++) {
-	  const certificate = await cert_contract.methods.getCertificate(i).call();
+	  const certificate = await cert_contract.methods.get_certificate(i).call();
 	  
 	  if (certificate[0] === name) {
 		certificateExists = true;
