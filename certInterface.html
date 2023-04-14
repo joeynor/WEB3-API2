@@ -32,10 +32,10 @@
 		<input id="certificateDescription" type="text">
 
 		<label for="certificateDate" class="col-lg-2 control-label">Date</label>
-		<input id="certificateDate" type="text">
+		<input id="certificateDate" type="text" pattern="\d{2}/\d{2}/\d{4}" title="DD/MM/YYY" required>
 	
 		<button id="button">Update Certificate</button>
-	
+		<button id="getCountBtn">Number Of Certificates</button> <!-- Add the new button -->
 	</div>
 	
 	
@@ -48,12 +48,17 @@
 
 // Display certificate information.
 
-var myAccountNumber = '0xf448379A05d2Da9CAE997a1b1d52D4597C9E5ed4';
-var myContractAddress = '0x9D83bd7381Ee31f56c22a1cc1e8f9f0335635E80';
+var myAccountNumber = '0x04a43CDcAF5036e24cF03DBD60345a63AddBEe5a';
+var myContractAddress = '0xd35E15bd64f7f5F445e0Def65b7737d95D7D60EB';
 
 let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 var certificateContract = new web3.eth.Contract([
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
 	{
 		"anonymous": false,
 		"inputs": [
@@ -77,9 +82,9 @@ var certificateContract = new web3.eth.Contract([
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "certificateEvent_Date",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"name": "certificateEvent",
@@ -97,67 +102,6 @@ var certificateContract = new web3.eth.Contract([
 		],
 		"name": "errorEvent",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_organization",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_date",
-				"type": "uint256"
-			}
-		],
-		"name": "setCertificate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_organization",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_date",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			}
-		],
-		"name": "storeCertificate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	},
 	{
 		"inputs": [
@@ -185,9 +129,9 @@ var certificateContract = new web3.eth.Contract([
 				"type": "string"
 			},
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "date",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -211,9 +155,9 @@ var certificateContract = new web3.eth.Contract([
 		"name": "date",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -223,40 +167,6 @@ var certificateContract = new web3.eth.Contract([
 		"inputs": [],
 		"name": "description",
 		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_index",
-				"type": "uint256"
-			}
-		],
-		"name": "get_certificate",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
 			{
 				"internalType": "string",
 				"name": "",
@@ -286,9 +196,9 @@ var certificateContract = new web3.eth.Contract([
 				"type": "string"
 			},
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -302,6 +212,40 @@ var certificateContract = new web3.eth.Contract([
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "get_certificate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -331,6 +275,62 @@ var certificateContract = new web3.eth.Contract([
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_organization",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_date",
+				"type": "string"
+			}
+		],
+		"name": "setCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_organization",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			}
+		],
+		"name": "storeCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]);
@@ -390,6 +390,17 @@ $("#button").click(function () {
     
     // Pass collected info to setCertificate contract method, including 'Description'
     certificateContract.methods.setCertificate(theCertificateName, theCertificateOrganization, theCertificateDescription, theCertificateDate).send({from: myAccountNumber,  gas: 5000000});
+});
+$("#getCountBtn").click(async function () { // Add event listener for the new button
+    try {
+        // Call the Solidity function
+        const result = await certificateContract.methods.getCertificateCount().call();
+
+        // Update the HTML page with the result
+        $("#certificate").text(`Certificate Count --> ${result}`);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 	</script>

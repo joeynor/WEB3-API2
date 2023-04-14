@@ -6,10 +6,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const certContractABI = require('./ABI.json');
 const port = 9500;
+var myAccountNumber = '0xDB7e1C851b96121F49c9b26ec0BdF8Da8999b20f';
+var myContractAddress = '0x4766da18f60A6a0e72249ed42350a1B50150aA8E';
 
 let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
-let myAccountNumber= "0xf448379A05d2Da9CAE997a1b1d52D4597C9E5ed4";
-let myContractAddress="0x9D83bd7381Ee31f56c22a1cc1e8f9f0335635E80";
 web3.eth.getBalance(myAccountNumber).then(balance => console.log(balance)); 
 
 const cert_contract = new web3.eth.Contract(certContractABI);

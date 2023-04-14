@@ -5,11 +5,11 @@ contract Certificate {
     string public name;
     string public organization;
     string public description;
-    uint public date;
+    string public date;
     string public constant contract_author = "Ahmedou Bchrs";
     address owner;
     
-    event certificateEvent(string certificateEvent_Name, string certificateEvent_Organization, string certificateEvent_Description, uint certificateEvent_Date);
+    event certificateEvent(string certificateEvent_Name, string certificateEvent_Organization, string certificateEvent_Description, string certificateEvent_Date);
     event errorEvent(string errorEvent_Description);
     
     // Array to store certificate information
@@ -20,14 +20,14 @@ contract Certificate {
         string name;
         string organization;
         string description;
-        uint date;
+        string date;
     }
     
     constructor(){
         name = "John Cena";
         organization = "WWE";
         description = "Certificate OF INVISIBILITY";
-        date = 202030;
+        date = "20/20/2020";
         owner = msg.sender;
     }
     
@@ -38,7 +38,7 @@ contract Certificate {
             _;
         }
     }
-    function getCertificate() public view returns (string memory, string memory, string memory, uint) {
+    function getCertificate() public view returns (string memory, string memory, string memory, string memory) {
         return (name, organization, description, date);
     }
     //get the number of certificates inside the array
@@ -46,7 +46,7 @@ contract Certificate {
         return certificates.length;
     }
     //API functions
-    function storeCertificate(string memory _name, string memory _organization, uint256 _date, string memory _description) public {
+    function storeCertificate(string memory _name, string memory _organization, string memory _date, string memory _description) public {
         certificates.push(CertificateInfo({
             name: _name,
             organization: _organization,
@@ -54,7 +54,7 @@ contract Certificate {
             date: _date
         }));
     }
-    function get_certificate(uint256 _index) public view returns (string memory, string memory, uint256, string memory) {
+    function get_certificate(uint256 _index) public view returns (string memory, string memory, string memory, string memory) {
         require(_index < certificates.length, "Certificate not found");
         CertificateInfo memory certificate = certificates[_index];
         return (certificate.name, certificate.organization, certificate.date, certificate.description);
@@ -62,7 +62,7 @@ contract Certificate {
 
     
     //UI function
-    function setCertificate(string memory _name, string memory _organization, string memory _description, uint _date) onlyOwner public {
+    function setCertificate(string memory _name, string memory _organization, string memory _description, string memory _date) onlyOwner public {
         // Create a new certificate object
         CertificateInfo memory newCertificate = CertificateInfo(_name, _organization, _description, _date);
         // Add the new certificate to the array
