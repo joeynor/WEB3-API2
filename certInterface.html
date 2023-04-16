@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>certificate Dashboard</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+
+<body>
+	<div class="container">
+
+		<h1>The Certificate Dashboard</h1>
+		<!-- Display a spinner while waiting for information -->
+		<img id="loader" src="ajax-loader.gif">
+		<h2 id="certificate"></h2>
+	
+		<label for="certificateName" class="col-lg-2 control-label">Name</label>
+		<input id="certificateName" type="text">
+	
+		<label for="certificateOrganization" class="col-lg-2 control-label">Organization</label>
+		<input id="certificateOrganization" type="text">
+		
+		<!-- Include label and input field for 'Description' -->
+		<label for="certificateDescription" class="col-lg-2 control-label">Description</label>
+		<input id="certificateDescription" type="text">
+
+		<label for="certificateDate" class="col-lg-2 control-label">Date</label>
+		<input id="certificateDate" type="text" pattern="\d{2}/\d{2}/\d{4}" title="DD/MM/YYY" required>
+	
+		<button id="button">Update Certificate</button>
+		<button id="getCountBtn">Number Of Certificates</button> <!-- Add the new button -->
+	</div>
+	
+	
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+
+
+
+
+// Display certificate information.
+
+var myAccountNumber = '0x04a43CDcAF5036e24cF03DBD60345a63AddBEe5a';
+var myContractAddress = '0xd35E15bd64f7f5F445e0Def65b7737d95D7D60EB';
+
+let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+
+var certificateContract = new web3.eth.Contract([
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "certificateEvent_Name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "certificateEvent_Organization",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "certificateEvent_Description",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "certificateEvent_Date",
+				"type": "string"
+			}
+		],
+		"name": "certificateEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "errorEvent_Description",
+				"type": "string"
+			}
+		],
+		"name": "errorEvent",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "certificates",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "organization",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "contract_author",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "date",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "description",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCertificate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCertificateCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "get_certificate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "organization",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_organization",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_date",
+				"type": "string"
+			}
+		],
+		"name": "setCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_organization",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			}
+		],
+		"name": "storeCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]);
+// Set the contract address
+certificateContract.options.address = myContractAddress;
+
+// Display certificate name, organization, and date
+certificateContract.methods.getCertificate().call(function (error, result) {
+    if (!error) {
+        $("#certificate").html('Name: ' + result[0] + '<br/>' + 'Organization: ' + result[1] + '<br/>' + 'Description: ' + result[2] + '<br/>' + 'Date: ' + result[3]); // Include 'Description' in the displayed information
+        console.log(result);
+    } else {
+        console.error(error);
+    }
+});
+
+// Listen for the 'certificateEvent' event
+certificateContract.events.certificateEvent(
+    function(error, result){
+        if (!error) {
+            $("#loader").hide();
+            $("#certificate").html('The current certificate is for ' + result.returnValues.certificateEvent_Name + 
+            ' issued by ' + result.returnValues.certificateEvent_Organization + '.' +
+            ' Description: ' + result.returnValues.certificateEvent_Description  + 
+            ' on ' + result.returnValues.certificateEvent_Date); // Include 'Description' in the displayed event information
+        } else {
+            $("#loader").hide();
+            console.log(error);
+        }
+    }
+);
+
+// Listen for the 'errorEvent' event
+certificateContract.events.errorEvent(
+    function(error, result){
+        $("#loader").hide();
+        $("#certificate").html('<h1>ERROR: </h1><br/>' + result.returnValues.errorEvent_Description);
+    }
+);
+
+// Update the current certificate info using the user-provided information
+$("#button").click(function () {
+    // Get certificate info from the UI
+    var theCertificateName = $("#certificateName").val();
+    console.log("THE CERTIFICATE NAME IS: " + theCertificateName);
+
+    var theCertificateOrganization = $("#certificateOrganization").val();
+    console.log("THE CERTIFICATE ORGANIZATION IS: " + theCertificateOrganization);
+
+	var theCertificateDescription = $("#certificateDescription").val(); // Get 'Description' from the UI
+    console.log("THE CERTIFICATE DESCRIPTION IS: " + theCertificateDescription);
+
+    var theCertificateDate = $("#certificateDate").val();
+    console.log("THE CERTIFICATE DATE IS: " + theCertificateDate);
+
+    $("#loader").show();
+    
+    // Pass collected info to setCertificate contract method, including 'Description'
+    certificateContract.methods.setCertificate(theCertificateName, theCertificateOrganization, theCertificateDescription, theCertificateDate).send({from: myAccountNumber,  gas: 5000000});
+});
+$("#getCountBtn").click(async function () { // Add event listener for the new button
+    try {
+        // Call the Solidity function
+        const result = await certificateContract.methods.getCertificateCount().call();
+
+        // Update the HTML page with the result
+        $("#certificate").text(`Certificate Count --> ${result}`);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+	</script>
+</body>
+</html>
